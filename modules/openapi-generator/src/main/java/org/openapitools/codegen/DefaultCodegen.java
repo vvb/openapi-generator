@@ -1837,7 +1837,13 @@ public class DefaultCodegen implements CodegenConfig {
     }
 
     /**
-     * Return the name of the oneOf schema
+     * Return the name of the oneOf schema.
+     *
+     * This name is used to set the value of CodegenProperty.openApiType.
+     *
+     * If the 'x-one-of-name' extension is specified in the OAS document, return that value.
+     * Otherwise, a name is constructed by creating a comma-separated list of all the names
+     * of the oneOf schemas.
      *
      * @param names          List of names
      * @param composedSchema composed schema
@@ -1846,8 +1852,8 @@ public class DefaultCodegen implements CodegenConfig {
     @SuppressWarnings("static-method")
     public String toOneOfName(List<String> names, ComposedSchema composedSchema) {
         Map<String, Object> exts = composedSchema.getExtensions();
-        if (exts != null && exts.containsKey("x-oneOf-name")) {
-            return (String) exts.get("x-oneOf-name");
+        if (exts != null && exts.containsKey("x-one-of-name")) {
+            return (String) exts.get("x-one-of-name");
         }
         return "oneOf<" + String.join(",", names) + ">";
     }
@@ -5767,14 +5773,14 @@ public class DefaultCodegen implements CodegenConfig {
     //// Following methods are related to the "useOneOfInterfaces" feature
 
     /**
-     * Add "x-oneOf-name" extension to a given oneOf schema (assuming it has at least 1 oneOf elements)
+     * Add "x-one-of-name" extension to a given oneOf schema (assuming it has at least 1 oneOf elements)
      *
      * @param s    schema to add the extension to
      * @param name name of the parent oneOf schema
      */
     public void addOneOfNameExtension(ComposedSchema s, String name) {
         if (s.getOneOf() != null && s.getOneOf().size() > 0) {
-            s.addExtension("x-oneOf-name", name);
+            s.addExtension("x-one-of-name", name);
         }
     }
 
