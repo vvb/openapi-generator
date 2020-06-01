@@ -138,6 +138,7 @@ public class CSharpNetCoreClientCodegen extends AbstractCSharpCodegen {
         typeMapping.put("object", "Object");
         typeMapping.put("UUID", "Guid");
         typeMapping.put("URI", "string");
+        typeMapping.put("AnyType", "Object");
 
         setSupportNullable(Boolean.TRUE);
         hideGenerationTimestamp = Boolean.TRUE;
@@ -916,7 +917,7 @@ public class CSharpNetCoreClientCodegen extends AbstractCSharpCodegen {
     @Override
     public String toInstantiationType(Schema schema) {
         if (ModelUtils.isMapSchema(schema)) {
-            Schema additionalProperties = ModelUtils.getAdditionalProperties(schema);
+            Schema additionalProperties = getAdditionalProperties(schema);
             String inner = getSchemaType(additionalProperties);
             if (ModelUtils.isMapSchema(additionalProperties)) {
                 inner = toInstantiationType(additionalProperties);
